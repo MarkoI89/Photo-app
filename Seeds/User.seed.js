@@ -1,19 +1,9 @@
 const mongoose = require('mongoose');
 const User = require('../models/User.model.js');
 const bcrypt = require('bcryptjs');
-
+require('./../db')
 const password = '13456'
 const hashedPassword = bcrypt.hashSync(password, 10)
-mongoose.connect('mongodb://localhost:27017/test', {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    })
-    .then(() => {
-        console.log('MONGO CONNECTION USER SEEDS');
-    })
-    .catch((err) => {
-        console.log(err)
-    });
 
 const seedUser = [{
         username: 'Marly',
@@ -26,7 +16,7 @@ const seedUser = [{
         role: 'photographer',
         email: 'marko@gmail.com',
         password: hashedPassword,
-    },
+    }, 
     {
         username: 'Ema',
         role: 'makeup artist',

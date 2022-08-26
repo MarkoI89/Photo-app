@@ -1,20 +1,24 @@
-const { Schema, model } = require("mongoose");
-const User = require("./User.model");
+const {
+  Schema,
+  model
+} = require('mongoose')
+
 const imageSchema = new Schema({
   link: Schema.Types.String,
   shot_by: {
     type: Schema.Types.ObjectId,
-    ref: "User",
+    ref: 'User',
   },
   model: {
     type: Schema.Types.ObjectId,
-    ref: "User",
+    ref: 'User',
   },
   makeup_artist: {
     type: Schema.Types.ObjectId,
-    ref: "User",
+    ref: 'User',
   },
-});
+}, )
+
 
 const Image = model("Image", imageSchema);
 

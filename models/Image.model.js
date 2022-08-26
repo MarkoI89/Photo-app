@@ -1,5 +1,4 @@
 const { Schema, model } = require("mongoose");
-const User = require("./User.model");
 const imageSchema = new Schema({
   link: Schema.Types.String,
   shot_by: {

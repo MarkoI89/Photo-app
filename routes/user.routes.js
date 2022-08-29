@@ -14,10 +14,10 @@ router.get("/", async (req, res, next) => {
   // else just get all users
   try {
     // console.log(req.query)
-    const { role } = req.query.role;
+    const { role } = req.query;
     if (req.query.role) {
-      await User.find(role);
-      res.json(role);
+      const roleFilter = await User.find({ role });
+      res.json(roleFilter);
     } else {
       const allUsers = await User.find();
       return res.status(200).json(allUsers);

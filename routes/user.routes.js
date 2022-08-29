@@ -32,7 +32,7 @@ router.get("/", async (req, res, next) => {
 });
 
 // Create a new user
-router.post("/create", async (req, res) => {
+router.post("/", async (req, res, next) => {
   try {
     const {
       username,
@@ -59,10 +59,15 @@ router.post("/create", async (req, res) => {
 
 // Find user by Id
 
+<<<<<<< HEAD
 router.get("/:userId", async (req, res) => {
   const {
     userId
   } = req.params;
+=======
+router.get("/:userId", async (req, res, next) => {
+  const { userId } = req.params;
+>>>>>>> 3fb600a895e26e6f178bd347d67454babf83e66c
   await User.findById(userId)
     .then((user) => res.status(200).json(user))
     .catch((error) => next(error));
@@ -70,6 +75,7 @@ router.get("/:userId", async (req, res) => {
 
 // Update users details
 
+<<<<<<< HEAD
 router.patch("/:userId/update", async (req, res) => {
   const {
     userId
@@ -79,6 +85,11 @@ router.patch("/:userId/update", async (req, res) => {
     role,
     password
   } = req.body;
+=======
+router.patch("/:userId", async (req, res, next) => {
+  const { userId } = req.params;
+  const { username, role, password } = req.body;
+>>>>>>> 3fb600a895e26e6f178bd347d67454babf83e66c
   await User.findByIdAndUpdate(
       userId, {
         username,
@@ -92,10 +103,15 @@ router.patch("/:userId/update", async (req, res) => {
     .catch((error) => next(error));
 });
 
+<<<<<<< HEAD
 router.delete("/:userId/delete", async (req, res) => {
   const {
     userId
   } = req.params;
+=======
+router.delete("/:userId", async (req, res, next) => {
+  const { userId } = req.params;
+>>>>>>> 3fb600a895e26e6f178bd347d67454babf83e66c
   await User.findByIdAndDelete(userId)
     .then((deletedUser) => res.status(200).json(deletedUser))
     .catch((error) => next(error));

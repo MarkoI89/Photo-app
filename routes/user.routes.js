@@ -14,9 +14,13 @@ router.get("/", async (req, res, next) => {
   // else just get all users
   try {
     // console.log(req.query)
-    const { role } = req.query;
+    const {
+      role
+    } = req.query;
     if (req.query.role) {
-      const roleFilter = await User.find({ role });
+      const roleFilter = await User.find({
+        role
+      });
       res.json(roleFilter);
     } else {
       const allUsers = await User.find();
@@ -30,7 +34,12 @@ router.get("/", async (req, res, next) => {
 // Create a new user
 router.post("/create", async (req, res) => {
   try {
-    const { username, role, password, email } = req.body;
+    const {
+      username,
+      role,
+      password,
+      email
+    } = req.body;
     if (!username || !role || !password || !email) {
       return res.json({
         message: "You should fill all the required fields",
@@ -51,7 +60,9 @@ router.post("/create", async (req, res) => {
 // Find user by Id
 
 router.get("/:userId", async (req, res) => {
-  const { userId } = req.params;
+  const {
+    userId
+  } = req.params;
   await User.findById(userId)
     .then((user) => res.status(200).json(user))
     .catch((error) => next(error));
@@ -60,19 +71,31 @@ router.get("/:userId", async (req, res) => {
 // Update users details
 
 router.patch("/:userId/update", async (req, res) => {
-  const { userId } = req.params;
-  const { username, role, password } = req.body;
+  const {
+    userId
+  } = req.params;
+  const {
+    username,
+    role,
+    password
+  } = req.body;
   await User.findByIdAndUpdate(
-    userId,
-    { username, role, password },
-    { new: true }
-  )
+      userId, {
+        username,
+        role,
+        password
+      }, {
+        new: true
+      }
+    )
     .then((updatedUser) => res.status(200).json(updatedUser))
     .catch((error) => next(error));
 });
 
 router.delete("/:userId/delete", async (req, res) => {
-  const { userId } = req.params;
+  const {
+    userId
+  } = req.params;
   await User.findByIdAndDelete(userId)
     .then((deletedUser) => res.status(200).json(deletedUser))
     .catch((error) => next(error));

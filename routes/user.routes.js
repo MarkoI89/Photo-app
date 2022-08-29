@@ -28,7 +28,7 @@ router.get("/", async (req, res, next) => {
 });
 
 // Create a new user
-router.post("/create", async (req, res) => {
+router.post("/", async (req, res, next) => {
   try {
     const { username, role, password, email } = req.body;
     if (!username || !role || !password || !email) {
@@ -50,7 +50,7 @@ router.post("/create", async (req, res) => {
 
 // Find user by Id
 
-router.get("/:userId", async (req, res) => {
+router.get("/:userId", async (req, res, next) => {
   const { userId } = req.params;
   await User.findById(userId)
     .then((user) => res.status(200).json(user))
@@ -59,7 +59,7 @@ router.get("/:userId", async (req, res) => {
 
 // Update users details
 
-router.patch("/:userId/update", async (req, res) => {
+router.patch("/:userId", async (req, res, next) => {
   const { userId } = req.params;
   const { username, role, password } = req.body;
   await User.findByIdAndUpdate(
@@ -71,7 +71,7 @@ router.patch("/:userId/update", async (req, res) => {
     .catch((error) => next(error));
 });
 
-router.delete("/:userId/delete", async (req, res) => {
+router.delete("/:userId", async (req, res, next) => {
   const { userId } = req.params;
   await User.findByIdAndDelete(userId)
     .then((deletedUser) => res.status(200).json(deletedUser))

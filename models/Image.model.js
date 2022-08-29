@@ -1,7 +1,3 @@
-const {
-  Schema,
-  model
-} = require('mongoose')
 
 const imageSchema = new Schema({
   link: Schema.Types.String,

@@ -1,26 +1,21 @@
 const router = require("express").Router();
 const Image = require("../models/Image.model");
 
-const User = require("../models/User.model")
-const fileUploader = require('../config/cloudinary.config')
+const User = require("../models/User.model");
+const fileUploader = require("../config/cloudinary.config");
 
 // create image
 
-router.post("/", fileUploader.single('image'), async (req, res, next) => {
-  const {
-
-    shot_by,
-    model,
-    makeup_artist
-  } = req.body;
+router.post("/", fileUploader.single("image"), async (req, res, next) => {
+  const { shot_by, model, makeup_artist } = req.body;
   try {
-    let link = ''
+    let link = "";
     if (!req.file) {
       return res.json({
         message: "Add the image",
       });
     } else {
-      link = req.file.path
+      link = req.file.path;
     }
     const newImage = await Image.create({
       link,
@@ -38,9 +33,11 @@ router.get("/", async (req, res, next) => {
   try {
     const { shot_by, model: modelUsername, makeup_artist } = req.query;
     const searchQuery = {};
-    const photographer = await User.findOne({ username: shot_by });
-    const model = await User.findOne({ username: modelUsername });
-    const makeupArtist = await User.findOne({ username: makeup_artist });
+    const model = await User.findOne({ username: modelUsername })
+      const photographer = await User.findOne({ username: shot_by })
+    const makeupArtist = await User.findOne({
+      username: makeup_artist,
+    });
     if (photographer) {
       searchQuery.shot_by = photographer.id;
     }
@@ -50,7 +47,9 @@ router.get("/", async (req, res, next) => {
     if (makeupArtist) {
       searchQuery.makeup_artist = makeupArtist.id;
     }
-    const shot_byFilter = await Image.find(searchQuery);
+    const shot_byFilter = await Image.find(searchQuery).populate(
+      "shot_by model makeup_artist"
+    );
     res.status(200).json(shot_byFilter);
   } catch (error) {
     next(error);
@@ -59,7 +58,6 @@ router.get("/", async (req, res, next) => {
 
 // find image by id
 router.get("/:imageId", async (req, res, next) => {
-
   const { imageId } = req.params;
   await Image.findById(imageId)
     .populate("shot_by model makeup_artist")
@@ -70,7 +68,6 @@ router.get("/:imageId", async (req, res, next) => {
 
 // delete image
 
-
 router.delete("/:imageId", async (req, res, next) => {
   const { imageId } = req.params;
   await Image.findByIdAndDelete(imageId)
@@ -79,4 +76,3 @@ router.delete("/:imageId", async (req, res, next) => {
 });
 
 module.exports = router;
-

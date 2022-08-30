@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const User = require("../models/User.model");
-
+const {isAuthenticated} = require('./../middleware/index.middleware')
 /**
  * All routes are prefixed with /api/user
  */
@@ -35,25 +35,25 @@ router.get("/", async (req, res, next) => {
 });
 
 // Create a new user
-router.post("/", async (req, res, next) => {
-  try {
-    const { username, role, password, email } = req.body;
-    if (!username || !role || !password || !email) {
-      return res.json({
-        message: "You should fill all the required fields",
-      });
-    }
-    const newUser = await User.create({
-      username: req.body.username,
-      role: req.body.role,
-      password: req.body.password,
-      email: req.body.email,
-    });
-    res.status(201).json(newUser);
-  } catch (error) {
-    next(error);
-  }
-});
+// router.post("/", async (req, res, next) => {
+//   try {
+//     const { username, role, password, email } = req.body;
+//     if (!username || !role || !password || !email) {
+//       return res.json({
+//         message: "You should fill all the required fields",
+//       });
+//     }
+//     const newUser = await User.create({
+//       username: req.body.username,
+//       role: req.body.role,
+//       password: req.body.password,
+//       email: req.body.email,
+//     });
+//     res.status(201).json(newUser);
+//   } catch (error) {
+//     next(error);
+//   }
+// });
 
 // Find user by Id
 
@@ -65,8 +65,9 @@ router.get("/:userId", async (req, res, next) => {
 });
 
 // Update users details
+// check if user is 
 
-router.patch("/:userId", async (req, res, next) => {
+router.patch("/:userId", isAuthenticated, async (req, res, next) => {
   const { userId } = req.params;
 
   const { role, password } = req.body;

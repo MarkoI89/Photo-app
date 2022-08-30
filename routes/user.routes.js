@@ -18,15 +18,23 @@ router.get("/", async (req, res, next) => {
   try {
     // console.log(req.query)
 
-    const { role } = req.query;
-    const { username } = req.query;
+    const {
+      role
+    } = req.query;
+    const {
+      username
+    } = req.query;
     if (role) {
-      const roleFilter = await User.find({ role });
+      const roleFilter = await User.find({
+        role
+      });
 
       res.json(roleFilter);
     }
     if (username) {
-      const usernameFilter = await User.find({ username });
+      const usernameFilter = await User.find({
+        username
+      });
       res.json(usernameFilter);
     } else {
       const allUsers = await User.find();
@@ -38,7 +46,7 @@ router.get("/", async (req, res, next) => {
 });
 
 // Create a new user
-// router.post("/", async (req, res, next) => {
+// router.post("/", isAuthenticated, async (req, res, next) => {
 //   try {
 //     const { username, role, password, email } = req.body;
 //     if (!username || !role || !password || !email) {
@@ -61,7 +69,9 @@ router.get("/", async (req, res, next) => {
 // Find user by Id
 
 router.get("/:userId", isAuthenticated, async (req, res, next) => {
-  const { userId } = req.params;
+  const {
+    userId
+  } = req.params;
   await User.findById(userId)
     .then((user) => res.status(200).json(user))
     .catch((error) => next(error));
@@ -71,10 +81,20 @@ router.get("/:userId", isAuthenticated, async (req, res, next) => {
 // check if user is
 
 router.patch("/:userId", isAuthenticated, async (req, res, next) => {
-  const { userId } = req.params;
+  const {
+    userId
+  } = req.params;
 
-  const { role, password } = req.body;
-  await User.findByIdAndUpdate(userId, { role, password }, { new: true })
+  const {
+    role,
+    password
+  } = req.body;
+  await User.findByIdAndUpdate(userId, {
+      role,
+      password
+    }, {
+      new: true
+    })
 
     .then((updatedUser) => res.status(200).json(updatedUser))
     .catch((error) => next(error));
@@ -82,7 +102,11 @@ router.patch("/:userId", isAuthenticated, async (req, res, next) => {
 // Delete user
 
 router.delete("/:userId", isAuthenticated, async (req, res, next) => {
-  const { userId } = req.params;
+
+  const {
+    userId
+  } = req.params;
+
   await User.findByIdAndDelete(userId)
     .then((deletedUser) => res.sendStatus(204))
     .catch((error) => next(error));

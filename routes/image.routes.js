@@ -35,7 +35,7 @@ router.post("/",isAuthenticated, photographerCheck, fileUploader.single('image')
   }
 });
 // find image
-router.get("/", async (req, res, next) => {
+router.get("/", isAuthenticated, async (req, res, next) => {
   try {
     const {
       shot_by,
@@ -69,7 +69,7 @@ router.get("/", async (req, res, next) => {
 });
 
 // find image by id
-router.get("/:imageId", async (req, res, next) => {
+router.get("/:imageId", isAuthenticated, async (req, res, next) => {
 
   const {
     imageId

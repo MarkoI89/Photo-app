@@ -16,7 +16,7 @@ router.get("/", async (req, res, next) => {
     // console.log(req.query)
 
     const { role } = req.query;
-    const {username} = req.query;
+    const { username } = req.query;
     if (role) {
       const roleFilter = await User.find({ role });
 
@@ -37,12 +37,7 @@ router.get("/", async (req, res, next) => {
 // Create a new user
 router.post("/", async (req, res, next) => {
   try {
-    const {
-      username,
-      role,
-      password,
-      email
-    } = req.body;
+    const { username, role, password, email } = req.body;
     if (!username || !role || !password || !email) {
       return res.json({
         message: "You should fill all the required fields",
@@ -61,7 +56,6 @@ router.post("/", async (req, res, next) => {
 });
 
 // Find user by Id
-
 
 router.get("/:userId", async (req, res, next) => {
   const { userId } = req.params;

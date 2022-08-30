@@ -2,7 +2,7 @@ const router = require("express").Router();
 const User = require("../models/User.model");
 const {
   isAuthenticated,
-  isAuthenticated
+  photographerCheck
 } = require('./../middleware/index.middleware')
 /**
  * All routes are prefixed with /api/user

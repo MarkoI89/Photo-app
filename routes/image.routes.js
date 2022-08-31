@@ -61,7 +61,7 @@ router.get("/", isAuthenticated, async (req, res, next) => {
     if (makeupArtist) {
       searchQuery.makeup_artist = makeupArtist.id;
     }
-    const shot_byFilter = await Image.find(searchQuery);
+    const shot_byFilter = await Image.find(searchQuery).populate("model shot_by makeup_artist");
     res.status(200).json(shot_byFilter);
   } catch (error) {
     next(error);

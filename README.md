@@ -27,5 +27,8 @@ In this app we gather photographers, make-up artists and models. The purpose is 
 
 _All data in the cloud is stored in Europe._</p>
 
+<h2>Postman documentation</h2>
+<a href="https://documenter.getpostman.com/view/22850977/VUxNSoVF">Click here</a>
+
 <h2>Deployed API</h2>
 <a href="https://lets-shoot.herokuapp.com/api">Try the app</a>

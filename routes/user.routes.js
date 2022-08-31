@@ -85,13 +85,10 @@ router.patch("/:userId", isAuthenticated, async (req, res, next) => {
 });
 // Delete user
 
-router.delete("/:userId", isAuthenticated, async (req, res, next) => {
+router.delete("/", isAuthenticated, async (req, res, next) => {
 
-  const {
-    userId
-  } = req.params;
 
-  await User.findByIdAndDelete(userId)
+  await User.findByIdAndDelete(req.user.id)
     .then((deletedUser) => res.sendStatus(204))
     .catch((error) => next(error));
 });

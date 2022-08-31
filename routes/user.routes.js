@@ -20,7 +20,7 @@ router.get("/", async (req, res, next) => {
 
     const { role } = req.query;
     const { username } = req.query;
-    const query = {}
+    const query = {$or: []}
     if (role) {
       query["$or"].push({role})
     }

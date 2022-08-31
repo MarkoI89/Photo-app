@@ -18,23 +18,15 @@ router.get("/", async (req, res, next) => {
   try {
     // console.log(req.query)
 
-    const {
-      role
-    } = req.query;
-    const {
-      username
-    } = req.query;
+    const { role } = req.query;
+    const { username } = req.query;
     if (role) {
-      const roleFilter = await User.find({
-        role
-      });
+      const roleFilter = await User.find({ role });
 
       res.json(roleFilter);
     }
     if (username) {
-      const usernameFilter = await User.find({
-        username
-      });
+      const usernameFilter = await User.find({ username });
       res.json(usernameFilter);
     } else {
       const allUsers = await User.find();
@@ -85,16 +77,8 @@ router.patch("/:userId", isAuthenticated, async (req, res, next) => {
     userId
   } = req.params;
 
-  const {
-    role,
-    password
-  } = req.body;
-  await User.findByIdAndUpdate(userId, {
-      role,
-      password
-    }, {
-      new: true
-    })
+  const { role, password } = req.body;
+  await User.findByIdAndUpdate(userId, { role, password }, { new: true })
 
     .then((updatedUser) => res.status(200).json(updatedUser))
     .catch((error) => next(error));

@@ -34,7 +34,7 @@ router.post("/", fileUploader.single('image'), async (req, res, next) => {
   }
 });
 // find image
-router.get("/", async (req, res, next) => {
+router.get("/", isAuthenticated, async (req, res, next) => {
   try {
     const { shot_by, model: modelUsername, makeup_artist } = req.query;
     const searchQuery = {};
@@ -58,7 +58,7 @@ router.get("/", async (req, res, next) => {
 });
 
 // find image by id
-router.get("/:imageId", async (req, res, next) => {
+router.get("/:imageId", isAuthenticated, async (req, res, next) => {
 
   const { imageId } = req.params;
   await Image.findById(imageId)

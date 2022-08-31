@@ -84,11 +84,11 @@ router.get("/:imageId", isAuthenticated, async (req, res, next) => {
 // delete image
 
 // added middleware to check if photographer
-router.delete("/:imageId",isAuthenticated, photographerCheck, async (req, res, next) => {
+router.delete("/:imageId",isAuthenticated, photographerCheck, (req, res, next) => {
   const {
     imageId
   } = req.params;
-  await Image.findByIdAndDelete(imageId)
+  Image.findOneAndDelete({$and: [{_id: imageId}, {shot_by: req.user.id}]})
     .then((deletedImage) => res.status(200).json(deletedImage))
     .catch((error) => next(error));
 });

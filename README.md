@@ -26,3 +26,6 @@ In this app we gather photographers, make-up artists and models. The purpose is 
 <p>Nodejs | Express |Postman | MongoDB (Compass locally & Altas for managing the deployed database)
 
 _All data in the cloud is stored in Europe._</p>
+
+<h2>Deployed API</h2>
+<a href="https://lets-shoot.herokuapp.com/api">Try the app</a>

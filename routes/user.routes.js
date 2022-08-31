@@ -20,18 +20,18 @@ router.get("/", async (req, res, next) => {
 
     const { role } = req.query;
     const { username } = req.query;
-    if (role) {
-      const roleFilter = await User.find({ role });
 
-      res.json(roleFilter);
+    const query = {}
+    if (role) {
+      query["$or"].push({role})
     }
     if (username) {
-      const usernameFilter = await User.find({ username });
-      res.json(usernameFilter);
-    } else {
-      const allUsers = await User.find();
+      query["$or"].push({username})
+    } 
+      const allUsers = await User.find(query);
+
       return res.status(200).json(allUsers);
-    }
+    
   } catch (error) {
     next(error);
   }

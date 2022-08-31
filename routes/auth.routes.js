@@ -20,20 +20,20 @@ router.post("/signup", async (req, res, next) => {
   }
   try {
     // const foundUser = await User.findOne({username: username})
-    const foundUser = await User.findOne({ username });
-    const foundEmail = await User.findOne({ email });
+    const foundUser = await User.findOne({$or: [{username}, {email}] });
+    // const foundEmail = await User.findOne({ email });
     if (foundUser) {
       return res.status(400).json({
         message:
-          "Username already exist, try logging in or registering with an other username.",
+          "Username or email already exist, try logging in or registering with an other username / email.",
       });
     }
-    if (foundEmail) {
-      return res.status(400).json({
-        message:
-          "Email already exist, try logging in or registering with an other email.",
-      });
-    }
+    // if (foundEmail) {
+    //   return res.status(400).json({
+    //     message:
+    //       "Email already exist, try logging in or registering with an other email.",
+    //   });
+    // }
     const generatedSalt = bcrypt.genSaltSync(salt);
     const hashedPassword = bcrypt.hashSync(password, generatedSalt);
 

@@ -20,6 +20,7 @@ router.get("/", async (req, res, next) => {
 
     const { role } = req.query;
     const { username } = req.query;
+
     const query = {}
     if (role) {
       query["$or"].push({role})
@@ -28,6 +29,7 @@ router.get("/", async (req, res, next) => {
       query["$or"].push({username})
     } 
       const allUsers = await User.find(query);
+
       return res.status(200).json(allUsers);
     
   } catch (error) {
@@ -75,16 +77,8 @@ router.patch("/:userId", isAuthenticated, async (req, res, next) => {
     userId
   } = req.params;
 
-  const {
-    role,
-    password
-  } = req.body;
-  await User.findByIdAndUpdate(userId, {
-      role,
-      password
-    }, {
-      new: true
-    })
+  const { role, password } = req.body;
+  await User.findByIdAndUpdate(userId, { role, password }, { new: true })
 
     .then((updatedUser) => res.status(200).json(updatedUser))
     .catch((error) => next(error));

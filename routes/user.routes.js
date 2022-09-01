@@ -10,7 +10,7 @@ const {
 
 // find all users
 
-router.get("/", async (req, res, next) => {
+router.get("/",isAuthenticated, async (req, res, next) => {
   // console.log what is req.query
   // if req.query exist
   // get the user and filter them by role using req.query.role
@@ -33,6 +33,9 @@ router.get("/", async (req, res, next) => {
       delete query["$or"];
     }
     const allUsers = await User.find(query);
+    for (const user of allUsers) {
+      user.password = undefined
+    }
 
     return res.status(200).json(allUsers);
   } catch (error) {
@@ -66,7 +69,10 @@ router.get("/", async (req, res, next) => {
 router.get("/:userId", isAuthenticated, async (req, res, next) => {
   const { userId } = req.params;
   await User.findById(userId)
-    .then((user) => res.status(200).json(user))
+    .then((user) => {
+      user.password = undefined
+      res.status(200).json(user)
+    })
     .catch((error) => next(error));
 });
 

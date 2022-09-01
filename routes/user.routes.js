@@ -11,10 +11,7 @@ const {
 // find all users
 
 router.get("/",isAuthenticated, async (req, res, next) => {
-  // console.log what is req.query
-  // if req.query exist
-  // get the user and filter them by role using req.query.role
-  // else just get all users
+
   try {
     // console.log(req.query)
 
@@ -42,27 +39,6 @@ router.get("/",isAuthenticated, async (req, res, next) => {
     next(error);
   }
 });
-
-// Create a new user
-// router.post("/", isAuthenticated, async (req, res, next) => {
-//   try {
-//     const { username, role, password, email } = req.body;
-//     if (!username || !role || !password || !email) {
-//       return res.json({
-//         message: "You should fill all the required fields",
-//       });
-//     }
-//     const newUser = await User.create({
-//       username: req.body.username,
-//       role: req.body.role,
-//       password: req.body.password,
-//       email: req.body.email,
-//     });
-//     res.status(201).json(newUser);
-//   } catch (error) {
-//     next(error);
-//   }
-// });
 
 // Find user by Id
 

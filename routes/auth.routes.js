@@ -4,13 +4,7 @@ const bcrypt = require("bcryptjs");
 const jsonWebToken = require("jsonwebtoken");
 const salt = 10;
 
-// router.get('/signup', (req, res, next) => {
-//   console.log(__dirname)
-//   const file = `${__dirname.replace('routes', 'public')}/signup.html`
-//   // res.send('ok')
-//   res.sendFile(file)
-// })
-
+// Signup
 router.post("/signup", async (req, res, next) => {
   const { username, email, password, role } = req.body;
   if (!password || !username) {
@@ -19,21 +13,14 @@ router.post("/signup", async (req, res, next) => {
       .json({ message: "Please provide a password and username." });
   }
   try {
-    // const foundUser = await User.findOne({username: username})
     const foundUser = await User.findOne({$or: [{username}, {email}] });
-    // const foundEmail = await User.findOne({ email });
     if (foundUser) {
       return res.status(400).json({
         message:
           "Username or email already exist, try logging in or registering with an other username / email.",
       });
     }
-    // if (foundEmail) {
-    //   return res.status(400).json({
-    //     message:
-    //       "Email already exist, try logging in or registering with an other email.",
-    //   });
-    // }
+
     const generatedSalt = bcrypt.genSaltSync(salt);
     const hashedPassword = bcrypt.hashSync(password, generatedSalt);
 

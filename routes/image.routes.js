@@ -9,7 +9,6 @@ const {
 } = require("../middleware/index.middleware");
 
 // create image
-
 router.post(
   "/",
   isAuthenticated,

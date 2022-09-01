@@ -1,56 +1,56 @@
 const router = require("express").Router();
 const Image = require("../models/Image.model");
 
-const User = require("../models/User.model")
-const fileUploader = require('../config/cloudinary.config');
+const User = require("../models/User.model");
+const fileUploader = require("../config/cloudinary.config");
 const {
-  photographerCheck, isAuthenticated
+  photographerCheck,
+  isAuthenticated,
 } = require("../middleware/index.middleware");
 
 // create image
 
-router.post("/",isAuthenticated, photographerCheck, fileUploader.single('image'), async (req, res, next) => {
-  const {
-    model,
-    makeup_artist
-  } = req.body;
-  try {
-    let link = ''
-    if (!req.file) {
-      return res.json({
-        message: "Add the image",
+router.post(
+  "/",
+  isAuthenticated,
+  photographerCheck,
+  fileUploader.single("image"),
+  async (req, res, next) => {
+    const { model, makeup_artist } = req.body;
+    try {
+      let link = "";
+      if (!req.file) {
+        return res.json({
+          message: "Add the image",
+        });
+      } else {
+        link = req.file.path;
+      }
+      const newImage = await Image.create({
+        link,
+        shot_by: req.user.id,
+        model,
+        makeup_artist,
       });
-    } else {
-      link = req.file.path
+      res.status(201).json(newImage);
+    } catch (error) {
+      next(error);
     }
-    const newImage = await Image.create({
-      link,
-      shot_by: req.user.id,
-      model,
-      makeup_artist,
-    });
-    res.status(201).json(newImage);
-  } catch (error) {
-    next(error);
   }
-});
+);
 // find image
 router.get("/", isAuthenticated, async (req, res, next) => {
   try {
-    const {
-      shot_by,
-      model: modelUsername,
-      makeup_artist
-    } = req.query;
+    const { shot_by, model: modelUsername, makeup_artist } = req.query;
     const searchQuery = {};
     const photographer = await User.findOne({
-      username: shot_by
+      username: shot_by,
     });
     const model = await User.findOne({
-      username: modelUsername
+      username: modelUsername,
     });
     const makeupArtist = await User.findOne({
-      username: makeup_artist
+      username: makeup_artist,
     });
     if (photographer) {
       searchQuery.shot_by = photographer.id;
@@ -61,7 +61,9 @@ router.get("/", isAuthenticated, async (req, res, next) => {
     if (makeupArtist) {
       searchQuery.makeup_artist = makeupArtist.id;
     }
-    const shot_byFilter = await Image.find(searchQuery).populate("model shot_by makeup_artist");
+    const shot_byFilter = await Image.find(searchQuery).populate(
+      "model shot_by makeup_artist"
+    );
     res.status(200).json(shot_byFilter);
   } catch (error) {
     next(error);
@@ -70,10 +72,7 @@ router.get("/", isAuthenticated, async (req, res, next) => {
 
 // find image by id
 router.get("/:imageId", isAuthenticated, async (req, res, next) => {
-
-  const {
-    imageId
-  } = req.params;
+  const { imageId } = req.params;
   await Image.findById(imageId)
     .populate("shot_by model makeup_artist")
 
@@ -84,13 +83,18 @@ router.get("/:imageId", isAuthenticated, async (req, res, next) => {
 // delete image
 
 // added middleware to check if photographer
-router.delete("/:imageId",isAuthenticated, photographerCheck, (req, res, next) => {
-  const {
-    imageId
-  } = req.params;
-  Image.findOneAndDelete({$and: [{_id: imageId}, {shot_by: req.user.id}]})
-    .then((deletedImage) => res.status(200).json(deletedImage))
-    .catch((error) => next(error));
-});
+router.delete(
+  "/:imageId",
+  isAuthenticated,
+  photographerCheck,
+  (req, res, next) => {
+    const { imageId } = req.params;
+    Image.findOneAndDelete({
+      $and: [{ _id: imageId }, { shot_by: req.user.id }],
+    })
+      .then((deletedImage) => res.status(200).json(deletedImage))
+      .catch((error) => next(error));
+  }
+);
 
 module.exports = router;

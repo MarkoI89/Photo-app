@@ -21,20 +21,20 @@ router.get("/", async (req, res, next) => {
     const { role } = req.query;
     const { username } = req.query;
 
-    const query = {$or: []}
-
-
+    const query = { $or: [] };
 
     if (role) {
-      query["$or"].push({role})
+      query["$or"].push({ role });
     }
     if (username) {
-      query["$or"].push({username})
-    } 
-      const allUsers = await User.find(query);
+      query["$or"].push({ username });
+    }
+    if (query["$or"].length === 0) {
+      delete query["$or"];
+    }
+    const allUsers = await User.find(query);
 
-      return res.status(200).json(allUsers);
-    
+    return res.status(200).json(allUsers);
   } catch (error) {
     next(error);
   }
@@ -64,21 +64,16 @@ router.get("/", async (req, res, next) => {
 // Find user by Id
 
 router.get("/:userId", isAuthenticated, async (req, res, next) => {
-  const {
-    userId
-  } = req.params;
+  const { userId } = req.params;
   await User.findById(userId)
     .then((user) => res.status(200).json(user))
     .catch((error) => next(error));
 });
 
 // Update users details
-// check if user is
 
 router.patch("/:userId", isAuthenticated, async (req, res, next) => {
-  const {
-    userId
-  } = req.params;
+  const { userId } = req.params;
 
   const { role, password } = req.body;
   await User.findByIdAndUpdate(userId, { role, password }, { new: true })
@@ -88,9 +83,7 @@ router.patch("/:userId", isAuthenticated, async (req, res, next) => {
 });
 // Delete user
 
-router.delete("/", isAuthenticated, async (req, res, next) => {
-
-
+router.delete("/:userId", isAuthenticated, async (req, res, next) => {
   await User.findByIdAndDelete(req.user.id)
     .then((deletedUser) => res.sendStatus(204))
     .catch((error) => next(error));

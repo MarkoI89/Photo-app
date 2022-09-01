@@ -91,20 +91,12 @@ router.patch("/reset/reset-password", async (req, res, next) => {
     });
     console.log(foundUser);
 
-    // if (!username) {
-    //   res.status(400).json({
-    //     message: "Please provide your username to update your password",
-    //   });
-    //   return;
-    // }
 
     if (!foundUser) {
       res.status(400).json({
         message: `${username} does not exist`
       });
-      return;
-    }
-
+      return;}
     const isPasswordMatched = await bcrypt.compare(
       password,
       foundUser.password
@@ -113,9 +105,7 @@ router.patch("/reset/reset-password", async (req, res, next) => {
       res.status(401).json({
         message: "This password was your previous one. You should change it or use it to login.",
       });
-      return;
-    }
-
+      return;}
     try {
       console.log("test");
       if (token) {
@@ -137,8 +127,8 @@ router.patch("/reset/reset-password", async (req, res, next) => {
       });
     }
   } catch (err) {
-    next(err);
-  }
-});
+    next(err);  }
+  });
+
 
 module.exports = router;

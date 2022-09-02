@@ -21,9 +21,7 @@ const photographerCheck = async (req, res, next) => {
             message: 'You need to be a photographer to access'
         })
     } else {
-        res.json({
-            message: "you are allowed to upload pictures"
-        })
+       
         next()
 
     }

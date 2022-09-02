@@ -1,6 +1,4 @@
 //Create a server
-const express = require("express");
-const app = express();
 const jsonWebToken = require('jsonwebtoken');
 const User = require("../models/User.model");
 
@@ -13,7 +11,7 @@ const photographerCheck = async (req, res, next) => {
     const user = await User.findOne({
         username: req.user.username
     });
-    const role = user?.role;
+    const role = user ? .role;
     //check if the role different than photographer, decline 
     if (role !== "photographer") {
         //send a json with an error
@@ -21,7 +19,7 @@ const photographerCheck = async (req, res, next) => {
             message: 'You need to be a photographer to access'
         })
     } else {
-       
+
         next()
 
     }
@@ -66,15 +64,6 @@ const isAuthenticated = async (req, res, next) => {
 
 
 
-//apply the middleware to request
-// app.post("/", photographerCheck, (req, res) => {
-//     res.send("you logged in")
-// })
-
-//the app listen to the port  5005
-app.listen(5005, () => {
-    console.log("server running")
-})
 
 module.exports = {
     isAuthenticated,

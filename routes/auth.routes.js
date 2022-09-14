@@ -6,7 +6,8 @@ const salt = 10;
 
 // Signup
 router.post("/signup", async (req, res, next) => {
-  const { username, email, password, role } = req.body;
+  // edit role2 role3
+  const { username, email, password, role, role2, role3 } = req.body;
   if (!password || !username) {
     return res
       .status(400)
@@ -28,6 +29,8 @@ router.post("/signup", async (req, res, next) => {
       username,
       email,
       role,
+      role2,
+      role3,
       password: hashedPassword,
     };
     const createdUser = await User.create(newUser);

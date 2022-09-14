@@ -11,7 +11,7 @@ const photographerCheck = async (req, res, next) => {
     const user = await User.findOne({
         username: req.user.username
     });
-    const role = user ? .role;
+    const role = user ?.role;
     //check if the role different than photographer, decline 
     if (role !== "photographer") {
         //send a json with an error

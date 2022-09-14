@@ -20,8 +20,9 @@ router.get("/",isAuthenticated, async (req, res, next) => {
 
     const query = { $or: [] };
 
+   
     if (role) {
-      query["$or"].push({ role });
+      query["$or"].push( {role} );
     }
     if (username) {
       query["$or"].push({ username });

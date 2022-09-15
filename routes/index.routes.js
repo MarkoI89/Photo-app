@@ -5,7 +5,7 @@ router.get("/", (req, res, next) => {
 });
 
 router.use("/user", require("./user.routes"));
-router.use("/image", require("./image.routes"));
+router.use("/images", require("./image.routes"));
 router.use("/auth", require("./auth.routes"));
 router.use("/", require("./reset-password.routes"));
 

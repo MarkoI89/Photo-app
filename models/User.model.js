@@ -4,25 +4,17 @@ const {
 } = require("mongoose");
 
 // TODO: Please make sure you edit the user model to whatever makes sense in this case
-// edit: copy role
+// Allow to have few role
 const userSchema = new Schema({
   username: {
     type: Schema.Types.String,
     unique: true
   },
-  role: {
+  role: [{
     type: Schema.Types.String,
-    enum: ["photographer", "model", "makeup artist"],
+    enum: ["photographer", "model", "makeup artist", "hair designer", "art director", "producer", "props master"],
     required: true
-  },
-  role2: {
-    type: Schema.Types.String,
-    enum: ["photographer", "model", "makeup artist"],
-  },
-  role3: {
-    type: Schema.Types.String,
-    enum: ["photographer", "model", "makeup artist"],
-  },
+  }],
   password: {
     type: Schema.Types.String,
     required: true

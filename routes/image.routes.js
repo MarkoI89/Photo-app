@@ -11,7 +11,6 @@ const {
 // create image
 router.post(
   "/",
-  isAuthenticated,
   photographerCheck,
   fileUploader.single("image"),
   async (req, res, next) => {
@@ -84,7 +83,6 @@ router.get("/:imageId", isAuthenticated, async (req, res, next) => {
 // added middleware to check if photographer
 router.delete(
   "/:imageId",
-  isAuthenticated,
   photographerCheck,
   (req, res, next) => {
     const { imageId } = req.params;

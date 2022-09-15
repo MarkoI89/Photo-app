@@ -7,27 +7,22 @@ const userSchema = new Schema({
     type: Schema.Types.String,
     unique: true,
   },
+
   Profile_photo: {
     type: Schema.Types.String,
   },
   about: {
     type: Schema.Types.String,
+    maxLength: 200
   },
-  role: [
-    {
-      type: Schema.Types.String,
-      enum: [
-        "photographer",
-        "model",
-        "makeup artist",
-        "hair designer",
-        "art director",
-        "producer",
-        "props master",
-      ],
-      required: true,
-    },
-  ],
+  role: {
+    type: [{
+    type: Schema.Types.String,
+    enum: ["photographer", "model", "makeup artist", "hair designer", "art director", "producer", "props master"],
+    required: true
+  }],
+  validate: [arrayLimit, '{PATH} exceeds the limit of 3']
+},
   password: {
     type: Schema.Types.String,
     required: true,
@@ -37,6 +32,9 @@ const userSchema = new Schema({
     required: true,
   },
 });
+function arrayLimit(val) {
+  return val.length <= 3;
+}
 
 const User = model("User", userSchema);
 

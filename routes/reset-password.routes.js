@@ -22,7 +22,6 @@ router.post("/reset/reset-password", async (req, res, next) => {
     const foundUser = await User.findOne({
       email: req.body.email,
     });
-    const { username } = foundUser;
 
     // check if the email already exists in the data base
     if (!foundUser) {
@@ -32,6 +31,7 @@ router.post("/reset/reset-password", async (req, res, next) => {
       return;
     }
 
+    const { username, email } = foundUser;
     const resetToken = jsonwebtoken.sign(
       {
         username,
@@ -39,7 +39,7 @@ router.post("/reset/reset-password", async (req, res, next) => {
       process.env.TOKEN_SECRET,
       {
         algorithm: "HS256",
-        expiresIn: "1h",
+        expiresIn: "15m",
       }
     );
 
@@ -58,7 +58,7 @@ router.post("/reset/reset-password", async (req, res, next) => {
 
     const emailMessage = await transporter.sendMail({
       from: `"Photo app" <markoivezic89@gmail.com>`,
-      to: "markoivezic89@gmail.com",
+      to: email,
       subject: "Photo app | Reset password",
       text: `Here is the link to reset your password: http://localhost:${process.env.PORT}/user/reset-password/?token=${resetToken}`,
     });

@@ -44,6 +44,7 @@ router.get("/", isAuthenticated, async (req, res, next) => {
 
 router.get("/:userId", isAuthenticated, async (req, res, next) => {
   const { userId } = req.params;
+  
   await User.findById(userId)
     .then((user) => {
       user.password = undefined;
@@ -53,20 +54,24 @@ router.get("/:userId", isAuthenticated, async (req, res, next) => {
 });
 
 // Update users details
+// Check if token or ID are the same
+// Check updatedUser
 
-router.patch("/:userId", isAuthenticated, async (req, res, next) => {
-  const { userId } = req.params;
+router.patch("/", isAuthenticated , (req, res, next) => {
+  // const { userId } = req.params;
 
   const { role } = req.body;
-  await User.findByIdAndUpdate(userId, { role }, { new: true })
+
+  User.findByIdAndUpdate(req.user._id, {$addToSet: {role}}, { new: true })
+
 
     .then((updatedUser) => res.status(200).json(updatedUser))
     .catch((error) => next(error));
 });
 // Delete user
 
-router.delete("/:userId", isAuthenticated, async (req, res, next) => {
-  await User.findByIdAndDelete(req.user.id)
+router.delete("/", isAuthenticated,  (req, res, next) => {
+  User.findByIdAndDelete(req.user.id)
     .then((deletedUser) => res.sendStatus(204))
     .catch((error) => next(error));
 });

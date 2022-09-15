@@ -31,6 +31,9 @@ const isAuthenticated = async (req, res, next) => {
     // Once everything went well, go to the next middleware
     next()
 }
+
+
+
 //This middleware will check if the user is a photographer
 const photographerCheck = async (req, res, next) => {
     await isAuthenticated(req, res, next)
@@ -61,5 +64,5 @@ const photographerCheck = async (req, res, next) => {
 
 module.exports = {
     isAuthenticated,
-    photographerCheck
+    photographerCheck,
 }

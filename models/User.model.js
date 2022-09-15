@@ -9,6 +9,12 @@ const userSchema = new Schema({
     type: Schema.Types.String,
     unique: true
   },
+  Profile_photo: {
+    type: Schema.Types.String,
+  },
+  about: {
+    type: Schema.Types.String,
+  },
   role: {
     type: Schema.Types.String,
     enum: ["photographer", "model", "makeup artist"]

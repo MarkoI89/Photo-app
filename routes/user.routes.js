@@ -10,8 +10,7 @@ const {
 
 // find all users
 
-router.get("/",isAuthenticated, async (req, res, next) => {
-
+router.get("/", isAuthenticated, async (req, res, next) => {
   try {
     // console.log(req.query)
 
@@ -31,7 +30,7 @@ router.get("/",isAuthenticated, async (req, res, next) => {
     }
     const allUsers = await User.find(query);
     for (const user of allUsers) {
-      user.password = undefined
+      user.password = undefined;
     }
 
     return res.status(200).json(allUsers);
@@ -46,8 +45,8 @@ router.get("/:userId", isAuthenticated, async (req, res, next) => {
   const { userId } = req.params;
   await User.findById(userId)
     .then((user) => {
-      user.password = undefined
-      res.status(200).json(user)
+      user.password = undefined;
+      res.status(200).json(user);
     })
     .catch((error) => next(error));
 });
@@ -57,8 +56,8 @@ router.get("/:userId", isAuthenticated, async (req, res, next) => {
 router.patch("/:userId", isAuthenticated, async (req, res, next) => {
   const { userId } = req.params;
 
-  const { role, password } = req.body;
-  await User.findByIdAndUpdate(userId, { role, password }, { new: true })
+  const { role } = req.body;
+  await User.findByIdAndUpdate(userId, { role }, { new: true })
 
     .then((updatedUser) => res.status(200).json(updatedUser))
     .catch((error) => next(error));

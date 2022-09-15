@@ -16,6 +16,7 @@ const userSchema = new Schema({
   },
   about: {
     type: Schema.Types.String,
+    maxLength: 200
   },
   role: {
     type: [{

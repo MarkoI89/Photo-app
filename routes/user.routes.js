@@ -10,8 +10,7 @@ const {
 
 // find all users
 
-router.get("/",isAuthenticated, async (req, res, next) => {
-
+router.get("/", isAuthenticated, async (req, res, next) => {
   try {
     // console.log(req.query)
 
@@ -32,7 +31,7 @@ router.get("/",isAuthenticated, async (req, res, next) => {
     }
     const allUsers = await User.find(query);
     for (const user of allUsers) {
-      user.password = undefined
+      user.password = undefined;
     }
 
     return res.status(200).json(allUsers);
@@ -48,8 +47,8 @@ router.get("/:userId", isAuthenticated, async (req, res, next) => {
   
   await User.findById(userId)
     .then((user) => {
-      user.password = undefined
-      res.status(200).json(user)
+      user.password = undefined;
+      res.status(200).json(user);
     })
     .catch((error) => next(error));
 });
@@ -62,7 +61,9 @@ router.patch("/", isAuthenticated , (req, res, next) => {
   // const { userId } = req.params;
 
   const { role } = req.body;
+
   User.findByIdAndUpdate(req.user._id, {$addToSet: {role}}, { new: true })
+
 
     .then((updatedUser) => res.status(200).json(updatedUser))
     .catch((error) => next(error));

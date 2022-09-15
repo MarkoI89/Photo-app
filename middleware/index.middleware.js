@@ -3,9 +3,6 @@ const jsonWebToken = require('jsonwebtoken');
 const User = require("../models/User.model");
 
 
-
-
-
 const isAuthenticated = async (req, res, next) => {
     try {
         let token = req.headers.authorization
@@ -62,10 +59,6 @@ const photographerCheck = async (req, res, next) => {
 }
 
 // jwt middleware
-
-
-
-
 
 
 

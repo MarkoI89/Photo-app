@@ -1,14 +1,11 @@
-const {
-  Schema,
-  model
-} = require("mongoose");
+const { Schema, model } = require("mongoose");
 
 // TODO: Please make sure you edit the user model to whatever makes sense in this case
 // Allow to have few role
 const userSchema = new Schema({
   username: {
     type: Schema.Types.String,
-    unique: true
+    unique: true,
   },
 
   Profile_photo: {
@@ -28,7 +25,7 @@ const userSchema = new Schema({
 },
   password: {
     type: Schema.Types.String,
-    required: true
+    required: true,
   },
   email: {
     type: Schema.Types.String,

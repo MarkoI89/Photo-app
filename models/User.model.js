@@ -7,8 +7,7 @@ const userSchema = new Schema({
     type: Schema.Types.String,
     unique: true,
   },
-
-  Profile_photo: {
+  avatar: {
     type: Schema.Types.String,
   },
   about: {

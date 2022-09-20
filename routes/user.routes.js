@@ -48,7 +48,7 @@ router.get("/:userId", isAuthenticated, async (req, res, next) => {
 
   await User.findById(userId)
     .then((user) => {
-      user.password = undefined;
+      //user.password = undefined;
       res.status(200).json(user);
     })
     .catch((error) => next(error));
@@ -77,7 +77,7 @@ router.patch(
         { new: true }
       );
 
-      updatedUser.password = undefined
+      //updatedUser.password = undefined
       res.status(200).json(updatedUser);
     } catch (error) {
       next(error);

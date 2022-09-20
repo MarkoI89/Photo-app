@@ -60,8 +60,9 @@ router.get("/:userId", isAuthenticated, async (req, res, next) => {
 
 router.patch(
   "/",
-  isAuthenticated,
   fileUploader.single("avatar"),
+  isAuthenticated,
+  
   async (req, res, next) => {
     try {
       let avatar;

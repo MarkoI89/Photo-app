@@ -25,7 +25,7 @@ router.get("/", isAuthenticated, async (req, res, next) => {
       query["$or"].push({ role });
     }
     if (username) {
-      query["$or"].push({ username });
+      query["$or"].push({ username: { $regex: username, $options: "i" } });
     }
     if (query["$or"].length === 0) {
       delete query["$or"];
@@ -58,6 +58,7 @@ router.get("/:userId", isAuthenticated, async (req, res, next) => {
 // Check if token or ID are the same
 // Check updatedUser
 
+
 router.patch(
   "/",
   fileUploader.single("avatar"),
@@ -88,6 +89,7 @@ router.patch(
     //   .catch((error) => next(error));
   }
 );
+
 // Delete user
 
 router.delete("/", isAuthenticated, (req, res, next) => {

@@ -10,7 +10,7 @@ const {
 
 // find all users
 
-router.get("/", isAuthenticated, async (req, res, next) => {
+router.get("/", async (req, res, next) => {
   try {
     // console.log(req.query)
 
@@ -19,12 +19,11 @@ router.get("/", isAuthenticated, async (req, res, next) => {
 
     const query = { $or: [] };
 
-   
     if (role) {
-      query["$or"].push( {role} );
+      query["$or"].push({ role });
     }
     if (username) {
-      query["$or"].push({ username });
+      query["$or"].push({ username: { $regex: username, $options: "i" } });
     }
     if (query["$or"].length === 0) {
       delete query["$or"];
@@ -44,7 +43,7 @@ router.get("/", isAuthenticated, async (req, res, next) => {
 
 router.get("/:userId", isAuthenticated, async (req, res, next) => {
   const { userId } = req.params;
-  
+
   await User.findById(userId)
     .then((user) => {
       user.password = undefined;
@@ -57,20 +56,19 @@ router.get("/:userId", isAuthenticated, async (req, res, next) => {
 // Check if token or ID are the same
 // Check updatedUser
 
-router.patch("/", isAuthenticated , (req, res, next) => {
+router.patch("/", isAuthenticated, (req, res, next) => {
   // const { userId } = req.params;
 
   const { role } = req.body;
 
-  User.findByIdAndUpdate(req.user._id, {$addToSet: {role}}, { new: true })
-
+  User.findByIdAndUpdate(req.user._id, { $addToSet: { role } }, { new: true })
 
     .then((updatedUser) => res.status(200).json(updatedUser))
     .catch((error) => next(error));
 });
 // Delete user
 
-router.delete("/", isAuthenticated,  (req, res, next) => {
+router.delete("/", isAuthenticated, (req, res, next) => {
   User.findByIdAndDelete(req.user.id)
     .then((deletedUser) => res.sendStatus(204))
     .catch((error) => next(error));

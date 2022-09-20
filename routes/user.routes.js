@@ -1,5 +1,7 @@
 const router = require("express").Router();
 const User = require("../models/User.model");
+const fileUploader = require("../config/cloudinary.config");
+
 const {
   isAuthenticated,
   photographerCheck,
@@ -56,16 +58,37 @@ router.get("/:userId", isAuthenticated, async (req, res, next) => {
 // Check if token or ID are the same
 // Check updatedUser
 
-router.patch("/", isAuthenticated, (req, res, next) => {
-  // const { userId } = req.params;
 
-  const { role } = req.body;
+router.patch(
+  "/",
+  isAuthenticated,
+  fileUploader.single("avatar"),
+  async (req, res, next) => {
+    try {
+      let avatar;
+      if (req.file) {
+        avatar = req.file.path;
+      }
 
-  User.findByIdAndUpdate(req.user._id, { $addToSet: { role } }, { new: true })
+      const updatedUser = await User.findByIdAndUpdate(
+        req.user._id,
+        { avatar },
+        { new: true }
+      );
 
-    .then((updatedUser) => res.status(200).json(updatedUser))
-    .catch((error) => next(error));
-});
+      updatedUser.password = undefined
+      res.status(200).json(updatedUser);
+    } catch (error) {
+      next(error);
+    }
+    // const { userId } = req.params;
+    // const { role } = req.body;
+    // User.findByIdAndUpdate(req.user._id, {$addToSet: {role}}, { new: true })
+    //   .then((updatedUser) => res.status(200).json(updatedUser))
+    //   .catch((error) => next(error));
+  }
+);
+
 // Delete user
 
 router.delete("/", isAuthenticated, (req, res, next) => {

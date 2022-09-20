@@ -68,6 +68,16 @@ router.get("/", isAuthenticated, async (req, res, next) => {
   }
 });
 
+router.get('/user/:id', isAuthenticated, async(req, res, next) => {
+  try {
+    const {id} = req.params
+    const allPicsFromUser = await Image.find({$or: [{shot_by:id}, {model:id}, {makeup_artist:id} ]})
+    res.status(200).json(allPicsFromUser)
+  } catch (error) {
+    next(error)
+  }
+})
+
 // find image by id
 router.get("/:imageId", isAuthenticated, async (req, res, next) => {
   const { imageId } = req.params;

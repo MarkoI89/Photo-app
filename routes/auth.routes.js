@@ -3,6 +3,7 @@ const User = require("./../models/User.model");
 const bcrypt = require("bcryptjs");
 const jsonWebToken = require("jsonwebtoken");
 const salt = 10;
+const {isAuthenticated} = require("./../middleware/index.middleware")
 
 // Signup
 router.post("/signup", async (req, res, next) => {
@@ -71,5 +72,7 @@ router.post("/login", async (req, res, next) => {
     next(error);
   }
 });
+
+router.get('/verify', isAuthenticated, (req, res) => res.json(req.user))
 
 module.exports = router;

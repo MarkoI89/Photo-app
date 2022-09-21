@@ -11,17 +11,34 @@ require('./../db')
 // add link key in each seeImage
 
 const seedImage = [{
-        shot_by: '',
-        model: '',
-        makeup_artist: '',
+        shot_by: 'Marko89',
+        model: 'Mike',
+        makeup_artist: 'Ema',
+        link: 'https://res.cloudinary.com/dai20tnfy/image/upload/v1661951860/Photo_app_storage/cjytsoiogdtgmdxilrfr.png'
 
     },
     {
-        shot_by: '',
-        model: '',
-        makeup_artist: '',
+        shot_by: 'Marly',
+        model: 'Mike',
+        makeup_artist: 'Ema',
+        link: 'https://res.cloudinary.com/dai20tnfy/image/upload/v1661939976/Photo_app_storage/zwfzj2kbpfp4gjnibtcr.png'
 
     },
+    {
+        shot_by: 'Marly',
+        model: 'Zoran',
+        makeup_artist: 'rade',
+        link: 'https://res.cloudinary.com/dai20tnfy/image/upload/v1661786201/Photo_app_storage/lu4mb5t26wov8rzlvusf.png'
+
+    },
+    {
+        shot_by: 'Marko89',
+        model: 'Sara',
+        makeup_artist: 'Milan',
+        link: 'https://res.cloudinary.com/dai20tnfy/image/upload/v1663750443/Photo_app_storage/aoq6ob1umeookmhmcsc1.jpg'
+
+    },
+    
 
 
 ]

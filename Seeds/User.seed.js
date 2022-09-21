@@ -22,6 +22,31 @@ const seedUser = [{
         role: 'makeup artist',
         email: 'Ema@gmail.com',
         password: hashedPassword,
+    },{
+        username: 'Em',
+        role: 'makeup artist',
+        email: 'Em@gmail.com',
+        password: hashedPassword,
+    },{
+        username: 'Ema',
+        role: 'makeup artist',
+        email: 'Ema@gmail.com',
+        password: hashedPassword,
+    },{
+        username: 'Ema',
+        role: 'makeup artist',
+        email: 'Ema@gmail.com',
+        password: hashedPassword,
+    },{
+        username: 'Ema',
+        role: 'makeup artist',
+        email: 'Ema@gmail.com',
+        password: hashedPassword,
+    },{
+        username: 'Ema',
+        role: 'makeup artist',
+        email: 'Ema@gmail.com',
+        password: hashedPassword,
     },
     {
         username: 'Mike',

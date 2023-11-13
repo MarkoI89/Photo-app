@@ -14,7 +14,7 @@ router.post(
   photographerCheck,
   fileUploader.single("image"),
   async (req, res, next) => {
-    const { model, makeup_artist } = req.body;
+    const { user, description, photographer, model, makeup_artist } = req.body;
     try {
       let link = "";
       if (!req.file) {
@@ -25,8 +25,10 @@ router.post(
         link = req.file.path;
       }
       const newImage = await Image.create({
+        user,
         link,
-        shot_by: req.user.id,
+        description,
+        photographer,
         model,
         makeup_artist,
       });
@@ -68,21 +70,124 @@ router.get("/", isAuthenticated, async (req, res, next) => {
   }
 });
 
-router.get('/user/:id', isAuthenticated, async(req, res, next) => {
+//Find photos where user is tagged
+
+router.get("/user/:username/tags", async (req, res) => {
+  const username = req.params.username;
+
   try {
-    const {id} = req.params
-    const allPicsFromUser = await Image.find({$or: [{shot_by:id}, {model:id}, {makeup_artist:id} ]})
-    res.status(200).json(allPicsFromUser)
+    const user = await User.findOne({ username });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    const images = await Image.find({
+      $or: [
+        { photographer: username },
+        { model: username },
+        { makeup_artist: username },
+      ],
+    }).populate({
+      path: "user",
+      model: "User",
+      select: "firstName lastName avatar username",
+    });
+
+    res.json(images);
   } catch (error) {
-    next(error)
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
-})
+});
+
+//Users images
+router.get("/user/:id", isAuthenticated, async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const allPicsFromUser = await Image.find({ user: id })
+      .populate({
+        path: "user",
+        model: "User",
+        select: "firstName lastName avatar username",
+      })
+      .exec();
+    res.status(200).json(allPicsFromUser);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// find friends images
+router.get("/user/:userId/friends-photos", async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    // Find the user
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Get the user's friends
+    const friends = user.friends;
+
+    // Find images uploaded by user's friends
+    const friendPhotos = await Image.find({ user: { $in: friends } });
+    // .populate("photographer")
+    // .populate("model")
+    // .populate("makeup_artist");
+
+    res.json({ friendPhotos });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+//like image
+
+router.patch("/like/:pictureId", isAuthenticated, async (req, res) => {
+  try {
+    const { pictureId } = req.params;
+    const { userId } = req.body;
+    const photo = await Image.findById(pictureId);
+    if (!photo) {
+      return res.status(404).json({ message: "Photo not found" });
+    }
+
+    console.log("Found photo:", photo);
+    const isLiked = photo.likes.get(userId);
+
+    console.log("Received pictureId:", pictureId);
+    console.log("Received userId:", userId);
+
+    if (isLiked) {
+      photo.likes.delete(userId);
+    } else {
+      photo.likes.set(userId, true);
+    }
+
+    const updatedPost = await Image.findByIdAndUpdate(
+      pictureId,
+      { likes: photo.likes },
+      { new: true }
+    );
+
+    console.log("Updated post:", updatedPost);
+
+    res.status(200).json(updatedPost);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+});
 
 // find image by id
 router.get("/:imageId", isAuthenticated, async (req, res, next) => {
   const { imageId } = req.params;
   await Image.findById(imageId)
-    .populate("shot_by model makeup_artist")
+    // .populate("shot_by model makeup_artist")
 
     .then((image) => res.status(200).json(image))
     .catch((error) => next(error));
@@ -91,17 +196,13 @@ router.get("/:imageId", isAuthenticated, async (req, res, next) => {
 // delete image
 
 // added middleware to check if photographer
-router.delete(
-  "/:imageId",
-  photographerCheck,
-  (req, res, next) => {
-    const { imageId } = req.params;
-    Image.findOneAndDelete({
-      $and: [{ _id: imageId }, { shot_by: req.user.id }],
-    })
-      .then((deletedImage) => res.status(200).json(deletedImage))
-      .catch((error) => next(error));
-  }
-);
+router.delete("/:imageId", photographerCheck, (req, res, next) => {
+  const { imageId } = req.params;
+  Image.findOneAndDelete({
+    $and: [{ _id: imageId }, { shot_by: req.user.id }],
+  })
+    .then((deletedImage) => res.status(200).json(deletedImage))
+    .catch((error) => next(error));
+});
 
 module.exports = router;

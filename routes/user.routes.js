@@ -14,8 +14,6 @@ const {
 
 router.get("/", isAuthenticated, async (req, res, next) => {
   try {
-    // console.log(req.query)
-
     const { role } = req.query;
     const { username } = req.query;
 
@@ -48,47 +46,106 @@ router.get("/:userId", isAuthenticated, async (req, res, next) => {
 
   await User.findById(userId)
     .then((user) => {
-      //user.password = undefined;
       res.status(200).json(user);
     })
     .catch((error) => next(error));
 });
 
-// Update users details
-// Check if token or ID are the same
-// Check updatedUser
-
+// Edit User's info
 
 router.patch(
   "/",
-  fileUploader.single("avatar"),
+  fileUploader.fields([
+    { name: "avatar", maxCount: 1 },
+    { name: "cover", maxCount: 1 },
+  ]),
   isAuthenticated,
-  
+
   async (req, res, next) => {
+    const { firstName, lastName, username, location, about } = req.body;
     try {
       let avatar;
-      if (req.file) {
-        avatar = req.file.path;
+      let cover;
+
+      if (req.files && req.files["avatar"] && req.files["avatar"][0]) {
+        avatar = req.files["avatar"][0].path;
+      }
+
+      if (req.files && req.files["cover"] && req.files["cover"][0]) {
+        cover = req.files["cover"][0].path;
       }
 
       const updatedUser = await User.findByIdAndUpdate(
         req.user._id,
-        { avatar },
+        { avatar, cover, firstName, lastName, username, location, about },
         { new: true }
       );
-
-      //updatedUser.password = undefined
       res.status(200).json(updatedUser);
     } catch (error) {
       next(error);
     }
-    // const { userId } = req.params;
-    // const { role } = req.body;
-    // User.findByIdAndUpdate(req.user._id, {$addToSet: {role}}, { new: true })
-    //   .then((updatedUser) => res.status(200).json(updatedUser))
-    //   .catch((error) => next(error));
   }
 );
+
+//get friends list
+
+router.get("/:userId/friends", isAuthenticated, async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const friendIds = user.friends;
+
+    const friends = await User.find({ _id: { $in: friendIds } });
+
+    const formattedFriends = friends.map(
+      ({ _id, firstName, lastName, username, role, location, avatar }) => {
+        return { _id, firstName, lastName, username, role, location, avatar };
+      }
+    );
+
+    res.status(200).json(formattedFriends);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// add remove friend
+router.patch("/:userId/:friendId", isAuthenticated, async (req, res, next) => {
+  try {
+    const { userId, friendId } = req.params;
+    const user = await User.findById(userId);
+    const friend = await User.findById(friendId);
+
+    if (user.friends.includes(friendId)) {
+      user.friends = user.friends.filter((userId) => userId !== friendId);
+      friend.friends = friend.friends.filter((userId) => userId !== friendId);
+    } else {
+      user.friends.push(friendId);
+      friend.friends.push(userId);
+    }
+    await user.save();
+    await friend.save();
+
+    const friends = await Promise.all(
+      user.friends.map((userId) => User.findById(userId))
+    );
+    const formattedFriends = friends.map(
+      ({ _id, firstName, lastName, username, role, location, avatar }) => {
+        return { _id, firstName, lastName, username, role, location, avatar };
+      }
+    );
+
+    res.status(200).json(formattedFriends);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+});
 
 // Delete user
 

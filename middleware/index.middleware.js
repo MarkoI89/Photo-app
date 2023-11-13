@@ -1,6 +1,7 @@
 //Create a server
 const jsonWebToken = require("jsonwebtoken");
 const User = require("../models/User.model");
+require("dotenv/config");
 // client send token on request, then get verified, tjen find user that fits with data in token
 
 const isAuthenticated = async (req, res, next) => {
@@ -16,7 +17,7 @@ const isAuthenticated = async (req, res, next) => {
     const userToken = jsonWebToken.verify(token, process.env.TOKEN_SECRET);
     console.log(userToken);
     const user = await User.findOne({
-      username: userToken.username,
+      email: userToken.email,
     });
     if (!user) {
       return res.status(400).json({

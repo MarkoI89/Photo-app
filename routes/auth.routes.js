@@ -3,19 +3,18 @@ const User = require("./../models/User.model");
 const bcrypt = require("bcryptjs");
 const jsonWebToken = require("jsonwebtoken");
 const salt = 10;
-const {isAuthenticated} = require("./../middleware/index.middleware")
+const { isAuthenticated } = require("./../middleware/index.middleware");
 
 // Signup
 router.post("/signup", async (req, res, next) => {
-  // edit role2 role3
-  const { username, email, password, role, about } = req.body;
-  if (!password || !username) {
+  const { username, email, password, role, firstName, lastName } = req.body;
+  if (!password || !email || !firstName || !lastName || !username) {
     return res
       .status(400)
-      .json({ message: "Please provide a password and username." });
+      .json({ message: "Please provide all the informations." });
   }
   try {
-    const foundUser = await User.findOne({$or: [{username}, {email}] });
+    const foundUser = await User.findOne({ $or: [{ username }, { email }] });
     if (foundUser) {
       return res.status(400).json({
         message:
@@ -30,7 +29,8 @@ router.post("/signup", async (req, res, next) => {
       username,
       email,
       role,
-      about,
+      firstName,
+      lastName,
       password: hashedPassword,
     };
     const createdUser = await User.create(newUser);
@@ -43,14 +43,14 @@ router.post("/signup", async (req, res, next) => {
 });
 
 router.post("/login", async (req, res, next) => {
-  const { username, password } = req.body;
-  if (!username || !password) {
+  const { email, password } = req.body;
+  if (!email || !password) {
     return res
       .status(400)
-      .json({ message: "Please provide username and password" });
+      .json({ message: "Please provide email and password" });
   }
   try {
-    const foundUser = await User.findOne({ username });
+    const foundUser = await User.findOne({ email });
     if (!foundUser) {
       return res.status(400).json({ message: "wrong credentials" });
     }
@@ -61,7 +61,7 @@ router.post("/login", async (req, res, next) => {
       return res.status(400).json({ message: "wrong credentials" });
     }
 
-    const payload = { username };
+    const payload = { email };
     const token = jsonWebToken.sign(payload, process.env.TOKEN_SECRET, {
       algorithm: "HS256",
       expiresIn: "1h",
@@ -73,6 +73,6 @@ router.post("/login", async (req, res, next) => {
   }
 });
 
-router.get('/verify', isAuthenticated, (req, res) => res.json(req.user))
+router.get("/verify", isAuthenticated, (req, res) => res.json(req.user));
 
 module.exports = router;

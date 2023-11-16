@@ -25,7 +25,7 @@ module.exports = (app) => {
   app.use(
     cors({
       credentials: true,
-      origin: "https://photo-app-blue.vercel.app",
+      origin: "http://localhost:3000",
     })
   );
 

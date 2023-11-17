@@ -25,7 +25,7 @@ module.exports = (app) => {
   app.use(
     cors({
       credentials: true,
-      origin: "https://letshoot.netlify.app/",
+      origin: "https://letshoot.netlify.app",
     })
   );
 

@@ -12,7 +12,7 @@ const {
 
 // find all users
 
-router.get("/", isAuthenticated, async (req, res, next) => {
+router.get("/", async (req, res, next) => {
   try {
     const { role } = req.query;
     const { username } = req.query;

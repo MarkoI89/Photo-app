@@ -64,28 +64,27 @@ router.patch(
   async (req, res, next) => {
     const { firstName, lastName, username, location, about } = req.body;
     try {
-      let avatar;
-      let cover;
-
+      let updateFields = { firstName, lastName, username, location, about };
+  
       if (req.files && req.files["avatar"] && req.files["avatar"][0]) {
-        avatar = req.files["avatar"][0].path;
+        updateFields.avatar = req.files["avatar"][0].path;
       }
-
+  
       if (req.files && req.files["cover"] && req.files["cover"][0]) {
-        cover = req.files["cover"][0].path;
+        updateFields.cover = req.files["cover"][0].path;
       }
-
+  
       const updatedUser = await User.findByIdAndUpdate(
         req.user._id,
-        { avatar, cover, firstName, lastName, username, location, about },
+        updateFields,
         { new: true }
       );
+  
       res.status(200).json(updatedUser);
     } catch (error) {
       next(error);
     }
   }
-);
 
 //get friends list
 
